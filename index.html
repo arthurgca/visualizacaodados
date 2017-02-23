@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>Visualização de Dados - 2016.2 - Arthur Gurjão</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <div class="col-sm-1"></div>
+
+
+  <div class="col-sm-9">
+
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Visualização de Dados - 2016.2 - Arthur Gurjão</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li id="home" class="active"><a href="/">Home</a></li>
+          <li id="lab2v4"><a href="#">Lab 2 - Parte 2 d3 v4</a></li>
+          <li id="lab2v3"><a href="#">Lab 2 - Parte 2 d3 v3</a></li>
+        </ul>
+      </div>
+    </nav>
+
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 id="panel-title" class="panel-title">Página inicial</h3>
+      </div>
+      <div id="panel" class="panel-body">
+        Página contém as visualizações geradas por mim para a disciplina Visualização de Dados no período de 2016.2.
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/d3.v3.min.js"></script>
+    <script src="js/radialBarChart.js"></script>
+    <script src="js/example.js"></script>
+
+    <script>
+    $( document ).ready(function(){
+      $( "li" ).on( "click", function() {
+        $("li").attr('class', "inactive");
+        $("svg").remove();
+        if( $(this).attr("id") != "home") {
+          $("#home").attr('class', "inactive");
+          $(this).toggleClass("active");
+
+          if($(this).attr('id') == "lab2v3") {
+            $("#panel").load("v3.html");
+            $("#panel-title").text("Lab 2 - Parte 2 d3 v3");
+          }
+          else if($(this).attr('id') == "lab2v4") {
+            $("#panel").load("v4.html");
+            $("#panel-title").text("Lab 2 - Parte 2 d3 v4");
+          }
+        } else {
+          $("#home").toggleClass("active");
+        }
+      });
+    });
+    </script>
+
+
+  </body>
+</div>
+
+<div class="col-sm-1"></div>
+
+</html>

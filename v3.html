@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style>
+
+	#chart {
+		font-family: "Helvetica Neue", Helvetica, sans-serif;
+		font-size: 14px;
+	}
+	#chart path {
+		fill: none;
+	}
+
+	/* layers */
+	#chart .layer-0 path {
+		fill: steelblue;
+	}
+	#chart .layer-1 path {
+		fill: white !important;
+		opacity: 0.3;
+		stroke-width: 2px;
+		stroke: #999;
+	}
+
+	/* Outer circle, tick-circles and spokes */
+	#chart circle.outer {
+		stroke: #aaa;
+		stroke-dasharray: 4, 4;
+	}
+	#chart .tick-circles circle {
+		stroke: #ddd;
+		stroke-dasharray: 2, 2;
+	}
+	#chart .spokes line {
+		stroke: #666;
+		stroke-width: 0.2;
+	}
+
+	/* Axis */
+	#chart .axis text {
+		font-size: 11px;
+	}
+	#chart .axis path {
+		stroke: #999;
+		shape-rendering: crispEdges;
+	}
+	#chart .axis line {
+		stroke: #999;
+		shape-rendering: crispEdges;
+	}
+
+	/* Labels */
+	#chart .labels text {
+		fill: #333;
+		font-size: 10px;
+		font-weight: 500;
+	}
+
+	div.tooltip {
+		position: absolute;
+		text-align: center;
+		width: 100px;
+		height: 40px;
+		padding: 2px;
+		background: grey;
+		border: 10px;
+		font-weight: bold;
+		border-radius: 8px;
+	}
+
+	</style>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<title>Visualização de Dados - 2016.2 - Arthur Gurjão</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+	<div class="col-sm-1"></div>
+
+	<h3>Quais os horários do dia em que os usuários se sentem mais aleatórios?</h3>
+	<div class="container">
+		<div class="col-sm-9">
+			<div id="chart"></div>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<ul>
+						<li>Os usuários responderam o quanto acharam que foram aleatórios após responder o formulário, de 0 à 10.</li>
+						<li>A maior média (6.60) foi às 22:00h.</li>
+						<li>A menor média (3.00) foi às 04:00h.</li>
+						<li><a href="https://drive.google.com/file/d/0B2rlaHwjOlZAcldJTVhJSjVpVnM/view?usp=sharing">Dados</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/d3.v3.min.js"></script>
+	<script src="js/radialBarChart.js"></script>
+	<script src="js/example.js"></script>
+	<div class="col-sm-1"></div>
+
+</body>
+</html>
