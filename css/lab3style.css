@@ -1,0 +1,39 @@
+.d3 {
+  box-shadow: 0 0 0 1px #eee;
+  box-sizing: border-box;
+}
+
+path,
+line {
+  fill: none;
+  shape-rendering: crispEdges;
+  stroke: #E8E8E8;
+}
+
+.path-line {
+  shape-rendering: initial;
+}
+.path-line.path-line1 {
+  stroke: #0baadd;
+}
+.path-line.path-line2 {
+  stroke: #47cf73;
+}
+
+.path-area {
+  stroke: none;
+}
+.path-area.path-area1 {
+  fill: rgba(241,163,64, 0.5);
+  stroke: rgba(241,163,64, 1);
+}
+.path-area.path-area2 {
+  fill: rgba(153,142,195, 0.5);
+  stroke: rgba(153,142,195, 1);
+}
+
+.tick text {
+  font-family: sans-serif;
+  font-size: 10px;
+  fill: #999;
+}
