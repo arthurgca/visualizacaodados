@@ -13,7 +13,7 @@ var xScale = undefined,
 var achaQueFoiAleatorio;
 var achaQueEhAleatorio;
 
-d3.csv("/data/datalab3.csv", function(data) {
+d3.csv("../data/datalab3.csv", function(data) {
        achaQueFoiAleatorio = data.map(function(d) { return  +d["achaQueFoiAleatorio"]; });
        achaQueEhAleatorio = data.map(function(d) { return  +d["achaQueEhAleatorio"]; });
        graph(data);
