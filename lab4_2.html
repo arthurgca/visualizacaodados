@@ -19,6 +19,15 @@
     .hidden {
         display: none;
     }
+    
+    div.tooltip {
+        color: #FFF;
+        background-color: #808080;
+        padding: .5em;
+        border-radius: 2px;
+        opacity: 0.8;
+        position: absolute;
+    }
 
 	</style>
 </head>
@@ -26,12 +35,11 @@
     <div class="container">
 <div class="row">
 <div class="col-sm-3">
-    <h3>Receita operacional direta de água</h3>
+    <h3>População Urbana Atendida com Abastecimento de Água</h3>
         <ul>
-    <li> Valor faturado anual decorrente da prestação do serviço de abastecimento de água, resultante exclusivamente da aplicação de tarifas e/ou taxas, excluídos os valores decorrentes da venda de água exportada no atacado (bruta ou tratada). </li>
-    <li>Unidade: R$/ano </li>
-    <li> <a id="municipioLi"></li>
-    <li><a id="receitaLi"></li>
+    <li> Valor da população urbana atendida com abastecimento de água pelo prestador de serviços, no último dia do ano de referência. Corresponde à população urbana que é efetivamente atendida com os serviços </li>
+    <li><a id="municipioLi"></li>
+    <li><a id="popAtendidaLi"></li>
         </ul>
         </div>
     <div class="col-sm-9">
@@ -45,9 +53,10 @@
 	<script src="//d3js.org/d3-scale-chromatic.v1.min.js"></script>
  	 <script src="//d3js.org/topojson.v1.min.js"></script>
 	<script>
-    var teste = document.getElementById("teste");
 
     var myMap = new Map();
+    	var tooltip = d3.select('body').append('div')
+        .attr('class', 'hidden tooltip');
     width = 1300,
 	height = 1000;
 	var svg = d3.select("#chart")
@@ -68,14 +77,14 @@
     var demandaScale = d3.scaleLinear();
 		d3.queue()
 			.defer(d3.json, "data/municipios_sab.json")
-			.defer(d3.csv, "data/info_financeira.csv")
+			.defer(d3.csv, "data/info_agua.csv")
 			.await(draw);
-    function draw(error, pb, info_financeira) {
+    function draw(error, pb, pop_urbana) {
       if (error) throw error;
 			var municipios = topojson.feature(pb, pb.objects.municipios_sab);
 			populacaoScale
-       .domain([0, 700000, 2000000, 10000000, 99999999])
-				.range([d3.rgb(255,255,204), d3.rgb(161,218,180), d3.rgb(65,182,196), d3.rgb(44,127,184), d3.rgb(37,52,148)]);
+       .domain([0, 5705, 12565, 78656, 999999999])
+				.range([d3.rgb(254,240,217), d3.rgb(253,204,138), d3.rgb(252,141,89), d3.rgb(227,74,51), d3.rgb(179,0,0)]);
       svg.selectAll(".municipios")
         .data(municipios.features)
       .enter().append("path")
@@ -92,27 +101,28 @@
                     var mouse = d3.mouse(svg.node()).map(function(d) {
                         return parseInt(d);
                     });
-                    var receita = myMap.get(d.properties.ID)[0];
-                    var municipioNome = myMap.get(d.properties.ID)[1];
-                    if (receita != "NaN") {
-                    	receita = "R$"+receita;
+
+                    var popUrbanaAtendida = myMap.get(d.properties.ID)[0];
+                    if (popUrbanaAtendida == "NaN") {
+                        popUrbanaAtendida = "Sem informações"
                     } else {
-                    	receita = "Sem informações"
+                        popUrbanaAtendida = popUrbanaAtendida + " habitantes atendidos.";
                     }
-                    document.getElementById("municipioLi").innerHTML = "<b>Município: </b>" + municipioNome ;
-                    document.getElementById("receitaLi").innerHTML = "<b>Receita: </b>" + receita.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+                    var municipioNome = myMap.get(d.properties.ID)[1];
+                    document.getElementById("municipioLi").innerHTML = "Município: " + municipioNome;
+                    document.getElementById("popAtendidaLi").innerHTML = "População Atendida: " + popUrbanaAtendida.replace(".0","");
                 })
                 .on('mouseout', function() {
                     tooltip.classed('hidden', true);
                 })
         .style("opacity", 0.5);
-			for (var i = 0; i < info_financeira.length; i++) {
-				myMap.set(parseInt(info_financeira[i].GEOCODIGO), [info_financeira[i].receitaAgua,
-					String(info_financeira[i].Município)]);
-				svg.select("#populacao-"+info_financeira[i].GEOCODIGO)
+			for (var i = 0; i < pop_urbana.length; i++) {
+				myMap.set(parseInt(pop_urbana[i].GEOCODIGO), [pop_urbana[i].popUrbanaAtendida,
+					String(pop_urbana[i].Município)]);
+				svg.select("#populacao-"+pop_urbana[i].GEOCODIGO)
 					.attr("fill", function (){  
-                                    if (info_financeira[i].receitaAgua == 0 || info_financeira[i].receitaAgua == "NaN") return "#D3D3D3";
-                                    return populacaoScale(+info_financeira[i].receitaAgua)
+                                    if (pop_urbana[i].popUrbanaAtendida == "NaN") return "#D3D3D3"; 
+                                    return populacaoScale(+pop_urbana[i].popUrbanaAtendida)
                                   });
 			}
     }
