@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>D3</title>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<style>
+
+    .populacao, .demanda {
+      stroke: #fff;
+      stroke-width: 0.8px;
+    }
+
+	path:hover {
+		fill-opacity: .7;
+	}
+
+    .hidden {
+        display: none;
+    }
+    
+    div.tooltip {
+        color: #FFF;
+        background-color: #808080;
+        padding: .5em;
+        border-radius: 2px;
+        opacity: 0.8;
+        position: absolute;
+    }
+
+	</style>
+</head>
+<body>
+    <div class="container">
+<div class="row">
+<div class="col-sm-3">
+    <h3>Receita operacional direta de água</h3>
+        <ul>
+    <li> Valor faturado anual decorrente da prestação do serviço de abastecimento de água, resultante exclusivamente da aplicação de tarifas e/ou taxas, excluídos os valores decorrentes da venda de água exportada no atacado (bruta ou tratada). </li>
+    <li>Unidade: R$/ano </li>
+        </ul>
+        </div>
+    <div class="col-sm-9">
+	<div id="chart"></div>
+    </div>
+</div>
+</div>
+</body>
+	<script src="js/d3.v4.min.js"></script>
+	<script src="//d3js.org/d3-color.v1.min.js"></script>
+	<script src="//d3js.org/d3-scale-chromatic.v1.min.js"></script>
+ 	 <script src="//d3js.org/topojson.v1.min.js"></script>
+	<script>
+
+    var myMap = new Map();
+    	var tooltip = d3.select('body').append('div')
+        .attr('class', 'hidden tooltip');
+    width = 1300,
+	height = 1000;
+	var svg = d3.select("#chart")
+			.append("svg")
+			.attr('version', '1.1')
+			.attr('viewBox', '0 210 '+width+' '+height)
+			.attr('width', '100%')
+			.attr('class', 'map-chart');
+
+    var projection = d3.geoAlbers()
+        .center([-36.820037, -7.195265])
+        .rotate([0, 0])
+        .parallels([0, 0])
+        .scale(3900)
+        .translate([width / 2, height / 2]);
+    var path = d3.geoPath().projection(projection);
+    var populacaoScale = d3.scaleThreshold();
+    var demandaScale = d3.scaleLinear();
+		d3.queue()
+			.defer(d3.json, "data/municipios_sab.json")
+			.defer(d3.csv, "data/info_financeira.csv")
+			.await(draw);
+    function draw(error, pb, info_financeira) {
+      if (error) throw error;
+			var municipios = topojson.feature(pb, pb.objects.municipios_sab);
+			populacaoScale
+       .domain([1, 700000, 2000000, 10000000, 99999999])
+				.range([d3.rgb(255,255,255), d3.rgb(178,226,226), d3.rgb(102,194,164), d3.rgb(44,162,95), d3.rgb(0,0,0)]);
+      svg.selectAll(".municipios")
+        .data(municipios.features)
+      .enter().append("path")
+        .attr("id", function(d) {
+         return "populacao-"+d.properties.ID; })
+        .attr("d", path)
+        .style("opacity", 0.5);
+      svg.selectAll(".municipios")
+        .data(municipios.features)
+      .enter().append("path")
+        .attr("id", function(d) { return "demanda-"+d.properties.ID })
+        .attr("d", path)
+                .on('mousemove', function(d) {
+                    var mouse = d3.mouse(svg.node()).map(function(d) {
+                        return parseInt(d);
+                    });
+                    var receita = myMap.get(d.properties.ID)[0];
+                    var municipioNome = myMap.get(d.properties.ID)[1];
+                    if (receita != 0) {
+                    	receita = "R$"+receita;
+                    } else {
+                    	receita = "Sem informações"
+                    }
+                    tooltip.classed('hidden', false)
+                        .attr('style', 'left:' + (mouse[0] + 15	) +
+                                'px; top:' + (mouse[1] - 200) + 'px')
+                        .html("Município: " + municipioNome + " |||	 Receita: " + receita.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                })
+                .on('mouseout', function() {
+                    tooltip.classed('hidden', true);
+                })
+        .style("opacity", 0.5);
+			for (var i = 0; i < info_financeira.length; i++) {
+				myMap.set(parseInt(info_financeira[i].GEOCODIGO), [info_financeira[i].receitaAgua,
+					String(info_financeira[i].Município)]);
+				svg.select("#populacao-"+info_financeira[i].GEOCODIGO)
+					.attr("fill", populacaoScale(+info_financeira[i].receitaAgua));
+			}
+    }
+
+		</script>
+</html>

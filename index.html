@@ -8,6 +8,12 @@
   <title>Visualização de Dados - 2016.2 - Arthur Gurjão</title>
   <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
+<style type="text/css">
+          .panel-resizable {
+            resize: vertical;
+          overflow: auto
+        }
+</style>
 <body>
 
   <div class="col-sm-1"></div>
@@ -23,7 +29,7 @@
         <ul class="nav navbar-nav">
           <li id="home" class="active"><a href="/">Home</a></li>
           <li id="lab2"><a href="#">Lab 2</a></li>
-          <li id="lab3"><a href="#">Lab 3</a></li>
+          <li id="lab4_1"><a href="#">Lab 4 - Mapa 1</a></li>
         </ul>
       </div>
     </nav>
@@ -57,10 +63,9 @@
             $("#panel").load("lab2.html");
             $("#panel-title").text("Lab 2 - Parte 2");
           }
-          else if($(this).attr('id') == "lab3") {
-            $("#panel").load("lab3.html");
-            $("#panel").load("lab3.html");
-            $("#panel-title").text("Lab 3");
+          else if($(this).attr('id') == "lab4_1") {
+            $("#panel").load("lab4_1.html");
+            $("#panel-title").text("Lab 4 - Mapa 1");
           }
         } else {
           $("#home").toggleClass("active");
