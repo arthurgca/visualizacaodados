@@ -28,14 +28,13 @@
     <div class="container">
 <div class="row">
 <div class="col-sm-3">
-    <h3>Porcentagem da População Urbana Atendida com Abastecimento de Água</h3>
+    <h3>Porcentagem da População Total Atendida com Abastecimento de Água</h3>
         <ul>
-    <li> Valor da população urbana atendida com abastecimento de água pelo prestador de serviços, no último dia do ano de referência. Corresponde à população urbana que é efetivamente atendida com os serviços </li>
+    <li> Cálculo da população total atendida com abastecimento de água em relação à população total do município. Corresponde à população urbana que é efetivamente atendida com os serviços acrescida de outras populações atendidas localizadas em áreas não consideradas urbanas. Essas populações podem ser rurais ou mesmo com características urbanas, apesar de estarem localizadas em áreas consideradas rurais pelo IBGE.</li>
     <li><a id="municipioLi"></li>
     <li><a id="popAtendidaLi"></li>
-    <li><a id="popUrbanaTotalLi"></li>
+    <li><a id="popTotalLi"></li>
     <li><a id="porcentagemLi"></a></li>
-    <li>Cálculo da porcentagem: População Urbana Atendida / População Urbano, dados de 2015</li>
         </ul>
         </div>
     <div class="col-sm-9">
@@ -80,7 +79,7 @@
       if (error) throw error;
 			var municipios = topojson.feature(pb, pb.objects.municipios_sab);
 			populacaoScale
-       .domain([0, 0.40, 0.80, 0.95, 0.995, 1])
+       .domain([0, 0.40, 0.60, 0.80, 0.95, 1])
 				.range([d3.rgb(254,240,217), d3.rgb(253,212,158), d3.rgb(253,187,132), d3.rgb(252,141,89), d3.rgb(227,74,51), d3.rgb(179,0,0)]);
       svg.selectAll(".municipios")
         .data(municipios.features)
@@ -99,36 +98,36 @@
                     });
                     var municipioNome = myMap.get(d.properties.ID)[1];
                     var estadoNome = myMap.get(d.properties.ID)[2];
-                    var popUrbanaAtendida = myMap.get(d.properties.ID)[0];
-                    var popUrbanaTotal = myMap.get(d.properties.ID)[3];
-                    var porcentagem = popUrbanaAtendida/popUrbanaTotal;
+                    var popTotalAtendida = myMap.get(d.properties.ID)[0];
+                    var popTotal = myMap.get(d.properties.ID)[3];
+                    var porcentagem = popTotalAtendida/popTotal;
 
-                    if (popUrbanaAtendida == "NaN") {
-                        popUrbanaAtendida = "Sem informações"
+                    if (popTotalAtendida == "NaN" || popTotalAtendida == 0) {
+                        popTotalAtendida = "Sem informações"
                     } else {
-                        popUrbanaAtendida = popUrbanaAtendida + " habitantes atendidos.";
+                        popTotalAtendida = popTotalAtendida + " habitantes atendidos.";
                     }
-                    if (isNaN(porcentagem)) {
+                    if (isNaN(porcentagem) || porcentagem == 0) {
                         porcentagem = "Não é possível calcular.";
                     } else {
                         porcentagem = (porcentagem * 100).toFixed(2) + "%";
                     }
                     document.getElementById("municipioLi").innerHTML = "Município: " + municipioNome + "/" + estadoNome;
-                    document.getElementById("popUrbanaTotalLi").innerHTML = "População Urbana: " + popUrbanaTotal + " habitantes.";
-                    document.getElementById("popAtendidaLi").innerHTML = "População Urbana Atendida: " + popUrbanaAtendida.replace(".0","");
-                    document.getElementById("porcentagemLi").innerHTML = "<b> Porcentagem da População Urbana Atendida: " + porcentagem;
+                    document.getElementById("popTotalLi").innerHTML = "População Total: " + popTotal + " habitantes.";
+                    document.getElementById("popAtendidaLi").innerHTML = "População Atendida: " + popTotalAtendida.replace(".0","");
+                    document.getElementById("porcentagemLi").innerHTML = "<b> Porcentagem da População Atendida: " + porcentagem;
                 + "</b>"})
                 .on('mouseout', function() {
                     tooltip.classed('hidden', true);
                 })
         .style("opacity", 0.15);
 			for (var i = 0; i < info_agua.length; i++) {
-				myMap.set(parseInt(info_agua[i].GEOCODIGO), [info_agua[i].popUrbanaAtendida,
-					String(info_agua[i].Município), String(info_agua[i].Estado), info_geral[i].popUrbanaTotal]);
+				myMap.set(parseInt(info_agua[i].GEOCODIGO), [info_agua[i].popTotalAtendida,
+					String(info_agua[i].Município), String(info_agua[i].Estado), info_geral[i].popTotal]);
 				svg.select("#populacao-"+info_agua[i].GEOCODIGO)
 					.attr("fill", function (){  
-                                    var porcentagem =  info_agua[i].popUrbanaAtendida/info_geral[i].popUrbanaTotal;
-                                    if (isNaN(porcentagem)) return "#D3D3D3"; 
+                                    var porcentagem =  info_agua[i].popTotalAtendida/info_geral[i].popTotal;
+                                    if (isNaN(porcentagem) || porcentagem == 0) return "#D3D3D3"; 
                                     return populacaoScale(+porcentagem)
                                   });
 			}
