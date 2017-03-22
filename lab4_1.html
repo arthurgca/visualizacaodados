@@ -13,7 +13,7 @@
     }
 
 	path:hover {
-		fill-opacity: .7;
+		fill-opacity: .1;
 	}
 
     .hidden {
@@ -82,7 +82,6 @@
         .attr("id", function(d) {
          return "populacao-"+d.properties.ID; })
         .attr("d", path)
-        .style("opacity", 0.5);
       svg.selectAll(".municipios")
         .data(municipios.features)
       .enter().append("path")
@@ -105,7 +104,7 @@
                 .on('mouseout', function() {
                     tooltip.classed('hidden', true);
                 })
-        .style("opacity", 0.5);
+        .style("opacity", 0.15);
 			for (var i = 0; i < info_financeira.length; i++) {
 				myMap.set(parseInt(info_financeira[i].GEOCODIGO), [info_financeira[i].receitaAgua,
 					String(info_financeira[i].Município)]);

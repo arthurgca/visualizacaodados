@@ -13,21 +13,14 @@
     }
 
 	path:hover {
-		fill-opacity: .7;
+        fill: #D3D3D3;
+		fill-opacity: .1;
 	}
 
     .hidden {
         display: none;
     }
     
-    div.tooltip {
-        color: #FFF;
-        background-color: #808080;
-        padding: .5em;
-        border-radius: 2px;
-        opacity: 0.8;
-        position: absolute;
-    }
 
 	</style>
 </head>
@@ -90,9 +83,8 @@
       .enter().append("path")
         .attr("id", function(d) {
          return "populacao-"+d.properties.ID; })
-        .attr("d", path)
-        .style("opacity", 0.5);
-      svg.selectAll(".municipios")
+        .attr("d", path);
+    svg.selectAll(".municipios")
         .data(municipios.features)
       .enter().append("path")
         .attr("id", function(d) { return "demanda-"+d.properties.ID })
@@ -101,7 +93,6 @@
                     var mouse = d3.mouse(svg.node()).map(function(d) {
                         return parseInt(d);
                     });
-
                     var popUrbanaAtendida = myMap.get(d.properties.ID)[0];
                     if (popUrbanaAtendida == "NaN") {
                         popUrbanaAtendida = "Sem informações"
@@ -115,7 +106,7 @@
                 .on('mouseout', function() {
                     tooltip.classed('hidden', true);
                 })
-        .style("opacity", 0.5);
+        .style("opacity", 0.15);
 			for (var i = 0; i < pop_urbana.length; i++) {
 				myMap.set(parseInt(pop_urbana[i].GEOCODIGO), [pop_urbana[i].popUrbanaAtendida,
 					String(pop_urbana[i].Município)]);

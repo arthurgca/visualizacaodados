@@ -13,7 +13,7 @@
     }
 
 	path:hover {
-		fill-opacity: .7;
+		fill-opacity: .1;
 	}
 
     .hidden {
@@ -85,14 +85,13 @@ igual ou superior a seis horas. No caso de município atendido por mais de um si
 			var municipios = topojson.feature(pb, pb.objects.municipios_sab);
 			populacaoScale
        .domain([0, 1, 30, 60, 100])
-				.range([d3.rgb(254,240,217), d3.rgb(253,204,138), d3.rgb(252,141,89), d3.rgb(227,74,51), d3.rgb(179,0,0)]);
+				.range([d3.rgb(241,238,246), d3.rgb(189,201,225), d3.rgb(116,169,207), d3.rgb(43,140,190), d3.rgb(4,90,141)]);
       svg.selectAll(".municipios")
         .data(municipios.features)
       .enter().append("path")
         .attr("id", function(d) {
          return "populacao-"+d.properties.ID; })
         .attr("d", path)
-        .style("opacity", 0.5);
       svg.selectAll(".municipios")
         .data(municipios.features)
       .enter().append("path")
@@ -115,7 +114,7 @@ igual ou superior a seis horas. No caso de município atendido por mais de um si
                 .on('mouseout', function() {
                     tooltip.classed('hidden', true);
                 })
-        .style("opacity", 0.5);
+        .style("opacity", 0.15);
 			for (var i = 0; i < info_qualidade.length; i++) {
 				myMap.set(parseInt(info_qualidade[i].GEOCODIGO), [info_qualidade[i].qteParalisacoesAno,
 					String(info_qualidade[i].Município)]);
